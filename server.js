@@ -24,6 +24,7 @@ const mainMenu = () => {
           "Display all Employees",
           "Add a Department",
           "Add a Role",
+          "Exit",
         ],
       },
     ])
@@ -34,23 +35,47 @@ const mainMenu = () => {
 };
 
 const choiceRoutes = (answer) => {
-  console.log(answer);
-
   switch (answer.menuChoice) {
     case "Display all Departments":
       console.log("Loading Departments ...");
+      db.query("SELECT * FROM departments", (error, results) => {
+        console.table(results);
+        console.log("Returning to the MAIN Menu ...");
+        mainMenu();
+      });
       break;
+
     case "Display all Roles":
       console.log("Loading Roles ...");
+      db.query(
+        "SELECT roles.id, roles.title, roles.salary, departments.name FROM roles INNER JOIN departments ON roles.department_id=departments.id",
+        (error, results) => {
+          console.table(results);
+          console.log("Returning to the MAIN Menu ...");
+          mainMenu();
+        }
+      );
       break;
+
     case "Display all Employees":
       console.log("Loading Employees ...");
+      db.query(
+        "SELECT employee.id, employee.first_name, employee.last_name, departments.name, roles.title, roles.salary FROM employee INNER JOIN roles ON employee.role_id=roles.id INNER JOIN departments ON roles.department_id=departments.id",
+        (error, results) => {
+          console.table(results);
+          console.log("Returning to the MAIN Menu ...");
+          mainMenu();
+        }
+      );
       break;
     case "Add a Department":
       addDepartment();
       break;
     case "Add a Role":
       addRole();
+      break;
+    case "Exit":
+      exit();
       break;
 
     default:
@@ -142,4 +167,26 @@ const addRole = () => {
     });
 };
 
+const exit = () => {
+  inquirer
+    .prompt([
+      {
+        // I do know that i could've used CONFIRM for this,
+        // but for visual representation of my application
+        // i prefer the use of arrow keys instead
+        type: "list",
+        choices: ["No", "Yes"],
+        message: "Are you Certain that you want to EXIT the Application?",
+        name: "exit",
+      },
+    ])
+    .then((answer) => {
+      if (answer.exit === "Yes") {
+        console.log("Exiting Application ...");
+        process.exit();
+      } else {
+        mainMenu();
+      }
+    });
+};
 mainMenu();
