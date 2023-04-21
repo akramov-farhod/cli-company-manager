@@ -47,7 +47,7 @@ const choiceRoutes = (answer) => {
       console.log("Loading Employees ...");
       break;
     case "Add a Department":
-      console.log("Please Enter a Name for the NEW Department");
+      addDepartment();
       break;
     case "Add a Role":
       console.log("Please Enter a Title for the NEW Role");
@@ -57,6 +57,28 @@ const choiceRoutes = (answer) => {
       console.log("Something went wrong, please try again");
       break;
   }
+};
+
+const addDepartment = () => {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "What is the name of the NEW department?",
+        name: "newDepartment",
+      },
+    ])
+    .then((answer) => {
+      console.log(answer.newDepartment);
+      let depName = answer.newDepartment;
+      db.query("INSERT INTO departments SET name=?", [depName]);
+      db.query("SELECT * FROM departments", (error, results) => {
+        console.table(results);
+        console.log("!!! Successfully ADDED a NEW Department !!!");
+        console.log("Returning to the MAIN Menu ...");
+        mainMenu();
+      });
+    });
 };
 
 mainMenu();
