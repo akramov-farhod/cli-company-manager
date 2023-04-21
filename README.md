@@ -37,7 +37,7 @@ npm i
 Once installed, to begin using the application run
 
 ```
-npm run
+npm start
 ```
 
 ## Contributing
