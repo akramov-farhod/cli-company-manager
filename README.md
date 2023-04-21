@@ -6,11 +6,11 @@ CLI Company Manager
 
 ## Demo
 
-<Video>
+<details>
 
 [demo.webm](https://user-images.githubusercontent.com/123986533/233555846-61f521cc-38c9-45fa-81d2-89260c7b0afc.webm)
 
-</Video>
+</details>
 
 ## Description
 
