@@ -50,7 +50,7 @@ const choiceRoutes = (answer) => {
       addDepartment();
       break;
     case "Add a Role":
-      console.log("Please Enter a Title for the NEW Role");
+      addRole();
       break;
 
     default:
@@ -75,6 +75,67 @@ const addDepartment = () => {
       db.query("SELECT * FROM departments", (error, results) => {
         console.table(results);
         console.log("!!! Successfully ADDED a NEW Department !!!");
+        console.log("Returning to the MAIN Menu ...");
+        mainMenu();
+      });
+    });
+};
+
+const addRole = () => {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "Enter a TITLE for the New Role",
+        name: "roleTitle",
+      },
+      {
+        type: "input",
+        message: "Enter desired SALARY for the New Role",
+        name: "roleSalary",
+      },
+      {
+        type: "list",
+        choices: ["Corporate", "Management", "Front", "Back"],
+        message: "Select a Department for the Role",
+        name: "roleDep",
+      },
+    ])
+    .then((answer) => {
+      console.log(answer.roleTitle);
+      console.log(answer.roleSalary);
+      let roleTitle = answer.roleTitle;
+      let roleSalary = answer.roleSalary;
+      let roleDepName = answer.roleDep;
+      let roleDepId;
+      switch (roleDepName) {
+        case "Corporate":
+          roleDepId = 1;
+          break;
+        case "Management":
+          roleDepId = 2;
+          break;
+        case "Front":
+          roleDepId = 3;
+          break;
+        case "Back":
+          roleDepId = 4;
+          break;
+        default:
+          console.log("Something went wrong, please try again!");
+          break;
+      }
+
+      let sql = "INSERT INTO roles(title, salary, department_id) VALUES(?,?,?)";
+      let userInput = [roleTitle, roleSalary, roleDepId];
+
+      db.query(sql, userInput, (error, result) => {
+        if (error) throw error;
+      });
+
+      db.query("SELECT * FROM roles", (error, results) => {
+        console.table(results);
+        console.log("!!! Successfully ADDED a NEW Role !!!");
         console.log("Returning to the MAIN Menu ...");
         mainMenu();
       });
